@@ -57,6 +57,7 @@ namespace WPEFramework {
             static void decoderStatusHandler(const char *owner, IARM_EventId_t eventId, void *data, size_t len);
             std::string getMostActiveDecoderStatus(const std::string &decoderName);
             void onDecoderStatusChange(const std::string &decoder, const std::string &status);
+            uint32_t apitest(const JsonObject& parameters, JsonObject& response);
 
         private:
             enum DecoderStatus {

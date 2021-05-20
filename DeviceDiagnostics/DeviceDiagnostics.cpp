@@ -69,6 +69,8 @@ namespace WPEFramework
             registerMethod(DEVICE_DIAGNOSTICS_METHOD_NAME_GET_CONFIGURATION, &DeviceDiagnostics::getConfigurationWrapper, this);
             registerMethod(DEVICE_DIAGNOSTICS_METHOD_GET_VIDEO_DECODER_STATUS, &DeviceDiagnostics::getVideoDecoderStatus, this);
             registerMethod(DEVICE_DIAGNOSTICS_METHOD_GET_AUDIO_DECODER_STATUS, &DeviceDiagnostics::getAudioDecoderStatus, this);
+
+            registerMethod("apitest", &DeviceDiagnostics::apitest, this);
         }
 
         DeviceDiagnostics::~DeviceDiagnostics()
@@ -97,6 +99,37 @@ namespace WPEFramework
                             IARM_BUS_PLAYBACK_DIAG_STATUS_CHANGE_EVENT));
             }
 
+        }
+
+        uint32_t apitest(const JsonObject& parameters, JsonObject& response)
+        {
+            std::string iarmargs = parameters["args"];
+            char args[1024];
+
+            typedef struct _IARM_BUS_Diag_EventData_t {
+                char pipeline_id[64];
+                char pipeline_name[64];
+                char decoder[16];
+                char status[16];
+                char action[16];
+            } IARM_Bus_Diag_EventData_t;
+
+            IARM_Bus_Diag_EventData_t busargs;
+            strcpy(args, iarmargs.c_str());
+
+            char *token = strtok(args, " ");
+            strcpy(busargs.pipeline_id, token);
+            char *token = strtok(NULL, " ");
+            strcpy(busargs.pipeline_name, token);
+            char *token = strtok(NULL, " ");
+            strcpy(busargs.decoder, token);
+            char *token = strtok(NULL, " ");
+            strcpy(busargs.status, token);
+            char *token = strtok(NULL, " ");
+            strcpy(busargs.action, token);
+
+            decoderStatusHandler("dupa", 1, &busargs, sizeof(busargs));
+            return 0;
         }
 
         uint32_t DeviceDiagnostics::getConfigurationWrapper(const JsonObject& parameters, JsonObject& response)
