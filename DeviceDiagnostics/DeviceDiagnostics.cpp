@@ -144,7 +144,6 @@ namespace WPEFramework
 
 #ifdef ENABLE_ERM
             EssRMgrGetAVState(m_EssRMgr, &status);
-            LOGINFO("decoder status from essrmgr is: %d", status);
 #endif
             return status;
         }
